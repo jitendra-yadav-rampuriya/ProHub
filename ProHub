@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proper Hub - Smart Solution</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* CSS Reset & Variables */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary-navy: #0e3a8a;
+      --primary-blue: #2563eb;
+      --primary-blue-dark: #1d4ed8;
+      --bg-slate: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-slate);
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    /* Outer Demo Container & Phone Mockup Frame */
+    .phone-wrapper {
+      width: 100%;
+      max-width: 400px;
+      min-height: 800px;
+      background: #1e293b;
+      border-radius: 46px;
+      padding: 10px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 8px #334155;
+    }
+
+    .screen {
+      width: 100%;
+      min-height: 780px;
+      background-color: #f2f7fd;
+      background-image: 
+        linear-gradient(to right, rgba(59, 130, 246, 0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(59, 130, 246, 0.12) 1px, transparent 1px);
+      background-size: 52px 52px;
+      border-radius: 36px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Top Grid Accent Dots */
+    .top-dots {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .dots-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 24px 0 24px;
+      opacity: 0.55;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #60a5fa;
+    }
+
+    /* Green Android Status Bar */
+    .status-bar {
+      width: 100%;
+      background-color: #1b6b3e;
+      color: #ffffff;
+      padding: 6px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 30;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .badge-volte {
+      font-size: 9px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    .badge-battery {
+      background: #25a85c;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    /* ========================================================
+       PAGE 1: LOGIN SCREEN STYLES
+       ======================================================== */
+    #page-login {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+    }
+
+    .top-section {
+      padding: 16px 20px 6px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .online-badge-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2px;
+    }
+
+    .online-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #ffffff;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #10b981;
+      position: relative;
+    }
+
+    .status-indicator::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      background-color: #10b981;
+      opacity: 0.4;
+      animation: pulseGlow 2s infinite ease-out;
+    }
+
+    .status-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .robot-container {
+      position: relative;
+      margin-top: 2px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      animation: robotFloat 3.5s ease-in-out infinite;
+    }
+
+    .robot-svg {
+      width: 135px;
+      height: 140px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+    }
+
+    .robot-eyes {
+      animation: robotBlink 4s infinite;
+      transform-origin: center;
+    }
+
+    @keyframes robotFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes robotBlink {
+      0%, 96%, 100% { transform: scaleY(1); }
+      98% { transform: scaleY(0.1); }
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    .toast-msg {
+      position: absolute;
+      top: 52px;
+      background: #ffffff;
+      color: #1e293b;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid #bfdbfe;
+      display: none;
+      z-index: 40;
+      white-space: nowrap;
+    }
+
+    .card-section {
+      padding: 0 16px 16px 16px;
+      position: relative;
+      z-index: 20;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 32px;
+      padding: 24px 20px 18px 20px;
+      box-shadow: 0 20px 45px -12px rgba(30, 64, 175, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f1f5f9;
+      position: relative;
+    }
+
+    .card-accent-bar {
+      position: absolute;
+      top: 0;
+      left: 32px;
+      right: 32px;
+      height: 3.5px;
+      background: linear-gradient(90deg, #3b82f6, #1d4ed8, #3b82f6);
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .card-title {
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .title-navy { color: var(--primary-navy); }
+    .title-blue { color: var(--primary-blue); }
+
+    .card-subtitle {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .error-box {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 5px;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      height: 50px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      padding: 0 14px;
+      transition: all 0.2s ease;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .input-icon {
+      width: 19px;
+      height: 19px;
+      color: #94a3b8;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .form-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 13.5px;
+      color: #1e293b;
+      background: transparent;
+    }
+
+    .btn-toggle-pw {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 52px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.45);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(180deg, #1d4ed8 0%, #1e40af 100%);
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .card-footer {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid #f1f5f9;
+      text-align: center;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .card-footer strong {
+      color: var(--primary-navy);
+      font-weight: 700;
+    }
+
+    /* ========================================================
+       PAGE 2: DASHBOARD SCREEN STYLES (MATCHES SCREENSHOT)
+       ======================================================== */
+    #page-dashboard {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 14px;
+      position: relative;
+      z-index: 10;
+      animation: fadeIn 0.25s ease;
+    }
+
+    /* Admin Profile Ribbon */
+    .admin-ribbon {
+      background: linear-gradient(90deg, #0e3a8a, #1d4ed8);
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(14, 58, 138, 0.2);
+    }
+
+    .badge-super {
+      background: rgba(16, 185, 129, 0.25);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      color: #a7f3d0;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    /* 1. Header Card */
+    .dash-header-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(241, 245, 249, 0.9);
+      margin-bottom: 12px;
+    }
+
+    .brand-col {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .zap-icon {
+      color: #2563eb;
+      fill: #2563eb;
+      width: 22px;
+      height: 22px;
+    }
+
+    .brand-text {
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .credits-box-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .credits-badge {
+      background: #eaf8f4;
+      border: 1px solid #c6f0e4;
+      padding: 4px 14px;
+      border-radius: 16px;
+      text-align: center;
+      min-width: 84px;
+    }
+
+    .credits-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #059669;
+      line-height: 1;
+    }
+
+    .credits-val {
+      font-size: 16px;
+      font-weight: 900;
+      color: #059669;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .credits-sub {
+      font-size: 10px;
+      font-weight: 600;
+      color: #64748b;
+      margin-top: 3px;
+    }
+
+    .btn-logout {
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      color: #e11d48;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: #ffe4e6;
+    }
+
+    /* 2. Connection Banner */
+    .connection-banner {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      border: 1px solid #f1f5f9;
+      border-left: 5px solid #ef4444;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      transition: border-color 0.3s;
+    }
+
+    .connection-banner.connected {
+      border-left-color: #10b981;
+    }
+
+    .conn-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: #ef4444;
+      margin-right: 12px;
+      flex-shrink: 0;
+      transition: background-color 0.3s;
+    }
+
+    .connection-banner.connected .conn-dot {
+      background-color: #10b981;
+    }
+
+    .conn-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .conn-sub {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 1px;
+    }
+
+    /* 3. Meter Configuration Card */
+    .meter-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+      border: 1px solid #f1f5f9;
+    }
+
+    .meter-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .meter-header svg {
+      width: 18px;
+      height: 18px;
+      color: #1e3a8a;
+    }
+
+    .meter-title {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: #1e3a8a;
+      text-transform: uppercase;
+    }
+
+    .dash-field {
+      margin-bottom: 10px;
+    }
+
+    .dash-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 4px;
+      text-align: left;
+    }
+
+    .dash-select-wrapper {
+      position: relative;
+    }
+
+    .dash-select, .dash-input {
+      width: 100%;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      padding: 0 12px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .dash-select {
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .dash-select-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #94a3b8;
+    }
+
+    .dash-select:focus, .dash-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* 4. Action Buttons */
+    .dash-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-action-usb {
+      height: 52px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(180deg, #1e40af 0%, #2563eb 100%);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+      transition: all 0.2s;
+    }
+
+    .btn-action-usb.connected {
+      background: linear-gradient(180deg, #059669 0%, #10b981 100%);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+    }
+
+    .btn-action-server {
+      height: 52px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      background: #e9edf3;
+      color: #94a3b8;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: not-allowed;
+      transition: all 0.2s;
+    }
+
+    .btn-action-server.active {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      color: #1e3a8a;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-action-server.running {
+      background: #f59e0b;
+      color: #ffffff;
+      border-color: #d97706;
+      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+    }
+
+    .home-bar {
+      width: 110px;
+      height: 4px;
+      background: #cbd5e1;
+      border-radius: 9999px;
+      margin: 8px auto 6px auto;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Outer Phone Mockup Frame -->
+  <div class="phone-wrapper">
+    <div class="screen">
+      
+      <!-- Top Dots Matrix -->
+      <div class="top-dots">
+        <div class="dots-row">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <!-- Android Mobile Green Status Bar -->
+      <div class="status-bar">
+        <span id="clock-text">20:23</span>
+        <div class="status-icons">
+          <span>📳</span>
+          <span class="badge-volte">Vo LTE2</span>
+          <span>4G+</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+            <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+            <circle cx="12" cy="20" r="1" fill="currentColor"></circle>
+          </svg>
+          <div class="badge-battery">
+            <span id="battery-pct">32</span>
+            <span>⚡</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================
+           VIEW 1: LOGIN PAGE
+           ======================================================== -->
+      <div id="page-login">
+        
+        <!-- Top Section with Badge & Robot Mascot -->
+        <div class="top-section">
+          <div class="online-badge-wrapper">
+            <div class="online-badge" id="btn-status">
+              <span class="status-indicator" id="status-dot"></span>
+              <span class="status-text" id="status-label">Online</span>
+            </div>
+          </div>
+
+          <!-- Toast notification -->
+          <div class="toast-msg" id="robot-toast">Hello from Proper Hub!</div>
+
+          <!-- Mascot SVG -->
+          <div class="robot-container" id="robot-mascot">
+            <svg class="robot-svg" viewBox="0 0 160 165" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="78" y="23" width="4" height="14" rx="2" fill="#1e40af" />
+              <circle cx="80" cy="18" r="7" fill="#2563eb" stroke="#1e40af" stroke-width="3" />
+              <circle cx="78" cy="16" r="2" fill="#93c5fd" />
+              <rect x="36" y="36" width="88" height="56" rx="22" fill="#ffffff" stroke="#1e40af" stroke-width="4" />
+              <g class="robot-eyes" id="robot-eyes-group">
+                <rect x="52" y="53" width="13" height="19" rx="6.5" fill="#1e3a8a" />
+                <circle cx="55.5" cy="57" r="2" fill="#ffffff" opacity="0.8" />
+                <rect x="95" y="53" width="13" height="19" rx="6.5" fill="#1e3a8a" />
+                <circle cx="98.5" cy="57" r="2" fill="#ffffff" opacity="0.8" />
+              </g>
+              <rect x="67" y="76" width="26" height="5" rx="2.5" fill="#93c5fd" />
+              <rect x="72" y="90" width="16" height="7" rx="2" fill="#1e40af" />
+              <rect x="12" y="99" width="16" height="34" rx="8" fill="#ffffff" stroke="#1e40af" stroke-width="3.5" />
